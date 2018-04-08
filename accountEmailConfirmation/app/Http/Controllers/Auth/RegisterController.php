@@ -76,7 +76,7 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user) {
         $this->guard()->logout($user);
 
-        return redirect('/login')->with('info','Please verify your email');
+        return redirect('/login')->with('info','Please verify your email. Didn\'t get it? <p href="'.route('auth.verify.resend'). '?email=' . $user->email .'"> Resend </p>');
     }
 
 }

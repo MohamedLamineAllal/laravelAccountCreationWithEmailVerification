@@ -39,7 +39,7 @@ class VerificationController extends Controller
         // if not already verified
         event(new UserRequestedVerificationEmail($user)); // emit the event
         
-        return redirect('/login')->withInfo('Verification email resent. Please check your inbox');
+        return redirect('/login')->withInfo('Verification email resent. Please check your inbox'. 'Didn\'t get it?<a href="' . route('auth.verify.resend') . '?email=' . $user->email .'">Resend.</a>');
     }
 
 }
