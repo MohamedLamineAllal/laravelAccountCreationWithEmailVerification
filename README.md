@@ -23,7 +23,7 @@ we create another table **verification_tokens** (it will have a direct one to on
 **Models:**<br/>There the User model and the VerificationToken model. The relationship between the two is a one to one relation. So we will set that. In VerificationToken we create a `user` methode, and in the User model, we create a verificationToken methode. both will allow us to set the relationship, and to access one model through the other. 
 Also we will add `hasVerifiedEmail` to the `User` model. 
 
-Note: don't forget to add the tables entries to `fillable` property. check it out. And that to avoid a **Mass Assignement error**. See the resources section bellow to learn about this error. 
+**Note:** don't forget to add the tables entries to `fillable` property. check it out. And that to avoid a **Mass Assignement error**. See the resources section bellow to learn about this error. 
 
 **controllers:**<br/>We add a controller for verification (VerificationController) wich contain a method **verify** (set user to verified) and another to resend the email (**resend**).
 
@@ -37,14 +37,14 @@ Here how it's done in the tuto, and it's stright forward. we set two events, one
 
 Now the event listener. We create it. And let it handle the email sending.
 
-Note: you need to register the events and there listeners. In laravel we do that through the property **\$listen** in the **EventServiceProvider**. Check it out. 
+**Note:**<br/> you need to register the events and there listeners. In laravel we do that through the property **\$listen** in the **EventServiceProvider**. Check it out. 
 Know that in place of creating the Events and Listeners files and the folders manually, you can just register them first, and then with ***php artisan Event:generate** all files get created for you. (the one already created will be note overided, and only the new one will be added)
 Know too that you can manually register them, and not through **\$listen** property of **EventServiceProvider** (see the doc: https://laravel.com/docs/5.6/events#manually-registering-events) 
 
 
 **services providers:**<br/>UserCreatedProvider is created, and is used to bind and overide the `created` methode of the user Model. => when the user is created through this function we generate the verification token and we emit the event UserRegistered, so the listener will send the verification email.
 
-Note: that this is not necessary:
+**Note:** that this is not necessary:
 ==> option one! is to do that in `registered` methode of the registration Auth  controller. But with what was done in the tuto, we have the advantage of a better load time. because, the user created event is triggered first  and so the `created` run before `registered` methode. 
 ==> option two! why not just overide it in User model directly. (i'm going to check this out.)
 
