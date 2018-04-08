@@ -63,7 +63,7 @@ To send the mail, we will be using laravel Mail system, the `mailable` class. we
 ====> database config:
 ====> **smtp config when using google:**
 
-**!!!!! Here a resume of All the process !!!!!**
+**!!!!! Here a resume of All the process !!!!!** 
 All start at registeration, (we are using laravel default template). Register => and you get the registration form. you enter the registeration data. and you send the form. All that is handled with the default laravel Auth scaffolding. after the registeration finish successefuly, the methode registered, from Auth/RegisterController that overide the one of the default trait used by the auth scaffolding. It's executed. And in this tuto, it's work is to logout and redirect to login with a message to check the email to confirm. (logout because by default, with auth scaffolding after registeration the user is automatically logged in [that behavior can be overided by overiding register methode, the same as with registered] (here a link for that: https://stackoverflow.com/questions/43226145/laravel-5-4-disable-auto-login-after-registration) [you take the code from the trait and just remove `$this->guard()->login($user)`; and may be modify it to redirect else wher ]. Another link: https://laracasts.com/discuss/channels/laravel/laravel-55-disable-auto-login-after-registration?page=1). Well we droped away. Here we continue. It was registred and it log out and show a message. In the same time (and that as the tuto did) the method created of user. is executed. after user creation. (that was done through the userCreatedServiceProvider, and it's binding of the function). So when that happen it litteraly will generate a verification token for the user. And emit userRegistered event. (Note: created methode get executed before, registered methode. That fact can add a little better load time. Because otherwise we could did all in registered methode [you can have a demo, by switching to the branch "accountEmailConfirmationWithoutUserCreatedProvider" of this repo => `git checkout accountEmailConfirmationWithoutUserCreatedProvider`]). Now we have an event that was emited, so the listener will execute the handle function to handle it. the email verification link is sent to the recipient user. All left is for him to use that link. And that will activate his account (that happen through the corresponding controller (following the used route we set for that). Which will change using the model the verified entry. and that's it). One last lefting for all that. the resend functionality, to resend the verification email again. for that we have a controller. and what it did, is emit resendEvent. which will trigger the listener which will send the email. in the tuto, resend message show only when you try to login and you are not verified yet.  You can change that, and add the resend option, for the message stright after registration (that in registered overided methode of the registeration auth controller).  So That's the principle, and how things works.
 
 
@@ -72,8 +72,10 @@ All start at registeration, (we are using laravel default template). Register =>
 ### Here some of the important outline, and things you may find useful, and may be some trouble shooting, or things you may avoid:
 
 **About the implementation above and tuto**
-**------->creating token in created and not registered**
+
+**-------> creating token in created and not registered**
 Using `created` methode (that is executed when the user is created) to create the token and trigger the UserRegistered event, that will imply sending the mail through the listener handling to the event. Rather `registered` method of the registeration  auth controller. Give a better load time, because `created` get executed first. And `registered` just after, we let it handle only the logout and the redirection whith showing the message. And they get executed separatly and asynchrounously. 
+
 **----> Add resend link to the after registeration and resend messages**
 Yea! in the tuto The author didn't does that. But it's a good practice. You can't know for sure if your message will be sent. Adding that is great. You can check it out. I did it in this overview. You form a link 
 ```php
@@ -84,6 +86,7 @@ for example. Also it's good to add it to the message after resend (VerificationC
 **Using Google gmail account to send the emails**
 If you are going to use the smtp server, you need to set the config to **.env** config file (check it out). But a problem as today you will encounter, is that google will block the tentative to send, because of there new security policy. They have disabled direct smtp operation. And all apps will be blocked. You need to enable allow less secure apps through your gmail settings here a link for that: https://myaccount.google.com/lesssecureapps
 or by going through "account => sign & security => Apps with account access" you find it all down.
+![allow less secure apps google](Images/google_allow_less_secure_apps.png "allow less secure apps google")
 
 Otherwise you go the secure way, and that throug applying to the oauth2.0 and google policy. (we will treat that later)
 
