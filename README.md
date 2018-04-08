@@ -55,8 +55,27 @@ Know too that you can manually register them, and not through **\$listen** prope
 
 **Env configuration:**<br/>====> database config:
 
-====> **smtp config when using google:**<br/>**!!!!! Here a resume of All the process !!!!!** 
+====> **smtp config when using google:**<br/> Here is the config when using tls
+```
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=yourmail@gmail.com
+MAIL_PASSWORD=yourgmailPassword
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=yourmail@gmail.com
+MAIL_FROM_NAME="Allal Mohamed Lamine"
+```
+Note if you use ssl instead:
+```
+ MAIL_ENCRYPTION=ssl
+ MAIL_PORT=465
+```
+Make sure to check google settings at the time in case they will change the settings.
+https://support.google.com/mail/answer/7126229?visit_id=1-636588126638512156-915614103&hl=en-GB&rd=1 (may change with time)
+or through your gmail "settings => frowarding and POP/IMAP" choose "settings instruction".
 
+**!!!!! Here a resume of All the process !!!!!** <br/>
 All start at registeration, (we are using laravel default template). Register => and you get the registration form. you enter the registeration data. and you send the form. All that is handled with the default laravel Auth scaffolding. after the registeration finish successefuly, the methode registered, from Auth/RegisterController that overide the one of the default trait used by the auth scaffolding. It's executed. And in this tuto, it's work is to logout and redirect to login with a message to check the email to confirm. (logout because by default, with auth scaffolding after registeration the user is automatically logged in [that behavior can be overided by overiding register methode, the same as with registered] (here a link for that: https://stackoverflow.com/questions/43226145/laravel-5-4-disable-auto-login-after-registration) [you take the code from the trait and just remove `$this->guard()->login($user)`; and may be modify it to redirect else wher ]. Another link: https://laracasts.com/discuss/channels/laravel/laravel-55-disable-auto-login-after-registration?page=1). Well we droped away. Here we continue. It was registred and it log out and show a message. In the same time (and that as the tuto did) the method created of user. is executed. after user creation. (that was done through the userCreatedServiceProvider, and it's binding of the function). So when that happen it litteraly will generate a verification token for the user. And emit userRegistered event. (Note: created methode get executed before, registered methode. That fact can add a little better load time. Because otherwise we could did all in registered methode [you can have a demo, by switching to the branch "accountEmailConfirmationWithoutUserCreatedProvider" of this repo => `git checkout accountEmailConfirmationWithoutUserCreatedProvider`]). Now we have an event that was emited, so the listener will execute the handle function to handle it. the email verification link is sent to the recipient user. All left is for him to use that link. And that will activate his account (that happen through the corresponding controller (following the used route we set for that). Which will change using the model the verified entry. and that's it). One last lefting for all that. the resend functionality, to resend the verification email again. for that we have a controller. and what it did, is emit resendEvent. which will trigger the listener which will send the email. in the tuto, resend message show only when you try to login and you are not verified yet.  You can change that, and add the resend option, for the message stright after registration (that in registered overided methode of the registeration auth controller).  So That's the principle, and how things works.
 
 
@@ -75,6 +94,12 @@ or by going through "account => sign & security => Apps with account access" you
 ![allow less secure apps google](Images/google_allow_less_secure_apps.png "allow less secure apps google")
 
 Otherwise you go the secure way, and that throug applying to the oauth2.0 and google policy. (we will treat that later)
+
+**----> Note googles offers three ways to send messages, also here is an overview about the sending messages limits** <br/> The three methode as now are: G Suite SMTP relay, 	Gmail SMTP server, 	Restricted Gmail SMTP server. 
+Here a link that show that, along with the configurations settings: https://support.google.com/a/answer/176600?hl=en
+
+**Note:** Using gmail as the mailing. Is one of the options that blogger prefer and like to use. But there is the limits to consider. for example for a normal smtp server it's about 2000 messages per day. and 10000 messages per day for gsuite smtp relay. So following the number of the readers that are on the mailing list. That may or not be an option. And you may or not want to follow some strategy. as like using multiple gmail accounts and have a counter to count the sent messages. plus the limit error handling. You can put a mechanism to switch from an account to another. But mostly the right thing is to pay to get the limit up. And use the gsuite smtp relay.
+
 
 **Mail server and the options**<br/>to send mails in the end a mail server is needed. Two options come here, setup your own server or use a mail server as a service. Cloud services now a day are too interestings.  You can too, use gmail and others mailing platform that allow sending mails through smtp. Even others methods.  
 
@@ -106,15 +131,35 @@ This against the first methode will have the advantage of a better performance. 
 ## Mail servers
 
 ### What is a mail server
-
+---- this section is to be comming!
+#### What is SMTP
+ 
 
 
 ### building your own mail server
+----- this section is to be comming!
+
+https://arstechnica.com/information-technology/2014/02/how-to-run-your-own-e-mail-server-with-your-own-domain-part-1/
+
+https://www.iredmail.org/
+
+https://www.digitalocean.com/community/tutorials/how-to-install-iredmail-on-ubuntu-12-04-x64
+
+https://www.cyberciti.biz/open-source/awesome-complete-open-source-mail-servers-solutions-for-linux-unix/
+
+list of free open source mail server software not just for php:
+https://www.how2shout.com/tools/best-free-opensource-mail-server-software.html
 
 ### Mail servers as a cloud service 
 
 
 
+## Mailing and pure PHP
+### PHPMailer
+https://github.com/PHPMailer/PHPMailer
+
+**Great tuto to see how it work**
+https://www.sitepoint.com/sending-emails-php-phpmailer/
 
 --------------------------------
 // now this work is in progress! depending in my time.
