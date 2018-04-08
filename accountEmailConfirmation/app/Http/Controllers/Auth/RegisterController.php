@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Auth;
 
+use App\Events\UserRegistered;
+
 class RegisterController extends Controller
 {
     /*
@@ -75,6 +77,12 @@ class RegisterController extends Controller
 
     protected function registered(Request $request, $user) {
         $this->guard()->logout($user);
+
+        $token = $user->verificationToken()->create([
+                    'token' => bin2hex(random_bytes(32))
+                ]);
+         
+                event(new UserRegistered($user));
 
         return redirect('/login')->with('info','Please verify your email');
     }

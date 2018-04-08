@@ -15,13 +15,13 @@ class UserCreatedProvider extends ServiceProvider
      */
     public function boot()
     {
-        User::created(function($user) {
-            $token = $user->verificationToken()->create([
-                'token' => bin2hex(random_bytes(32))
-            ]);
+        // User::created(function($user) {
+        //     $token = $user->verificationToken()->create([
+        //         'token' => bin2hex(random_bytes(32))
+        //     ]);
      
-            event(new UserRegistered($user));
-        });
+        //     event(new UserRegistered($user));
+        // });
     }
 
     /**
