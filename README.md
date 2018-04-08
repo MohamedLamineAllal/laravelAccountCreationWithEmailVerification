@@ -20,18 +20,18 @@ first we will add to the **users** table (and so the schema) a new field which i
 we create another table **verification_tokens** (it will have a direct one to one relation with the users table) [each user will have his unique token]
 (after setting the migration, and the env config and the database, we can launch the migrate to create the tables)
 
-**Models:**<br/>There the User model and the VerificationToken model. The relationship between the two is a one to one relation. So we will set that. In VerificationToken we create a `user` methode, and in the User model, we create a verificationToken methode. both will allow us to set the relationship, and to access one model through the other. 
+**Models:** <br/>There the User model and the VerificationToken model. The relationship between the two is a one to one relation. So we will set that. In VerificationToken we create a `user` methode, and in the User model, we create a verificationToken methode. both will allow us to set the relationship, and to access one model through the other. 
 Also we will add `hasVerifiedEmail` to the `User` model. 
 
 **Note:** don't forget to add the tables entries to `fillable` property. check it out. And that to avoid a **Mass Assignement error**. See the resources section bellow to learn about this error. 
 
-**controllers:**<br/>We add a controller for verification (VerificationController) wich contain a method **verify** (set user to verified) and another to resend the email (**resend**).
+**Controllers:**<br/>We add a controller for verification (VerificationController) wich contain a method **verify** (set user to verified) and another to resend the email (**resend**).
 
 And we have to overide the methode of the auth registration and login controllers, (**registered** for registration and **authenticated** for login). We set it to logout and show the relevant messages and redirect. [after registration we redirect to login page and we show verify your email message. or if wanted we login the user. and we show the message too. not part of the tuto, we can then limit his access. Through checking his status (using conditions in the views. or using a role managment library as laravel-permission for example, and then we will set a role for that state, and associate it to him, and so he will be limited in access)]
 
 For the verification controller, in resend email, we trigger an event for email resend which we would have created, and we have a listener that handle that. we are seeing that next.
 
-**events and there listeners:**<br/>There is different ways of implementing that. We will see too another way which is not part of that tuto. but the way in this tuto is through using the events and the listeners, it give a nice way that is flexible. Events let us easily organize the workflow, and the systematic between the different elements. 
+**Events and there listeners:**<br/>There is different ways of implementing that. We will see too another way which is not part of that tuto. but the way in this tuto is through using the events and the listeners, it give a nice way that is flexible. Events let us easily organize the workflow, and the systematic between the different elements. 
 
 Here how it's done in the tuto, and it's stright forward. we set two events, one is user registred event. The other is  user email resend request event.  Then we have a listener that listen to both of those event. Whenever one is triggered, we send the confirmation email to the user through the listener, which will trigger the action.  [know that we emit the events, ourselve, in the right place. And in this tuto: It is emited by the use of `UserRegistred` event, through `created` method of User model, and that is set through the binding using the service provider userRegisteredProvider that we create. (When this function is triggered! the confirmation token will be generated and the the userregistered event is emited right away. [we will come back to this provider in next section] ) ] (check the outline section: we can not to use a serviceProvider, for this even emiting, and implement the same in `registered` overided methode in registration auth default controller).  For the resend Event, it's emited from within the resend methode of the VerificationController we have created. (it's executed, through a route that we set, and so through a message we show to the user, with the link to resend [that message is shown after you try to login before you are verified (that in the tuto), In this i added this resend also to the message that show after registration, that ask you to check your email.])
 
@@ -42,7 +42,7 @@ Know that in place of creating the Events and Listeners files and the folders ma
 Know too that you can manually register them, and not through **\$listen** property of **EventServiceProvider** (see the doc: https://laravel.com/docs/5.6/events#manually-registering-events) 
 
 
-**services providers:**<br/>UserCreatedProvider is created, and is used to bind and overide the `created` methode of the user Model. => when the user is created through this function we generate the verification token and we emit the event UserRegistered, so the listener will send the verification email.
+**Services providers:**<br/>UserCreatedProvider is created, and is used to bind and overide the `created` methode of the user Model. => when the user is created through this function we generate the verification token and we emit the event UserRegistered, so the listener will send the verification email.
 
 **Note:** that this is not necessary:
 ==> option one! is to do that in `registered` methode of the registration Auth  controller. But with what was done in the tuto, we have the advantage of a better load time. because, the user created event is triggered first  and so the `created` run before `registered` methode. 
@@ -53,7 +53,7 @@ Know too that you can manually register them, and not through **\$listen** prope
 **Mail sending**<br/>To send the mail, we will be using laravel Mail system, the `mailable` class. we generate it using `php artisan make:mail SendVerificationToken`
 
 
-**env configuration:**<br/>====> database config:
+**Env configuration:**<br/>====> database config:
 
 ====> **smtp config when using google:**<br/>**!!!!! Here a resume of All the process !!!!!** 
 
