@@ -12,7 +12,7 @@ You find an implementation in the folder **accountEmailConfirmation**
 It's a direct follow of this online artical tutorial  https://phpbits.in/email-verification-with-laravel-5-5/
 
 Note bellow you will find a resume, and some outlines, and important notes.
-Now that there is more then what in the tutorial, and it can be interesting. i will highlight in bold the very interesting or maybe important things.
+Know that there is more then what in the tutorial, and it can be interesting. i will highlight in bold the very interesting or maybe important things.
 
 ### Here is a resume : 
 We will be using the laravel default auth scaffolding (but follwing the same logic we can use others libraries for that. as laravel-permission by spatie for example).
@@ -114,6 +114,9 @@ https://laravel.com/docs/5.6/mail
 
 ## Second: User registration with email confirmation in laravel. Using queue
 
+This against the first methode will have the advantage of a better performance. And a better page loading time.
+
+... to be continued
 
 
 ## Mail servers
