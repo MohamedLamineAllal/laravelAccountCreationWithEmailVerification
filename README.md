@@ -42,7 +42,7 @@ Know that in place of creating the Events and Listeners files and the folders ma
 Know too that you can manually register them, and not through **\$listen** property of **EventServiceProvider** (see the doc: https://laravel.com/docs/5.6/events#manually-registering-events) 
 
 
-**Services providers:**<br/>UserCreatedProvider is created, and is used to bind and overide the `created` methode of the user Model. => when the user is created through this function we generate the verification token and we emit the event UserRegistered, so the listener will send the verification email.
+**Services providers:**<br/>UserCreatedProvider is created, and is used to bind  the `created` event handling of the user Model. => when the user is created through the handler we provide we generate the verification token and we emit the event UserRegistered, so the listener will send the verification email.
 
 **Note:** that this is not necessary:
 ==> option one! is to do that in `registered` methode of the registration Auth  controller. But with what was done in the tuto, we have the advantage of a better load time. because, the user created event is triggered first  and so the `created` run before `registered` methode. 
@@ -132,6 +132,7 @@ This against the first methode will have the advantage of a better performance. 
 https://hackernoon.com/how-to-use-queue-in-laravel-5-4-for-email-verification-3617527a7dbf
 
 ... to be continued
+
 
 
 ## Mail servers
