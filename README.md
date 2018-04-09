@@ -135,8 +135,7 @@ https://hackernoon.com/how-to-use-queue-in-laravel-5-4-for-email-verification-36
 
 ... to be continued
 
-
-## Mail servers
+##Mail servers
 ### What is a mail server
 ---- this section is to be comming!
 #### What is SMTP
