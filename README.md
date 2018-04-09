@@ -124,9 +124,12 @@ https://laravel.com/docs/5.6/events#manually-registering-events
 **Laravel mail**
 https://laravel.com/docs/5.6/mail
 
-**Laravel Mass assignement error**<br/>## Second: User registration with email confirmation in laravel. Using queue
+**Laravel Mass assignement error**<br/>
+## Second: User registration with email confirmation in laravel. Using queue
 
 This against the first methode will have the advantage of a better performance. And a better page loading time.
+
+https://hackernoon.com/how-to-use-queue-in-laravel-5-4-for-email-verification-3617527a7dbf
 
 ... to be continued
 
